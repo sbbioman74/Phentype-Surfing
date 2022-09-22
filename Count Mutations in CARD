@@ -1,0 +1,27 @@
+#This Code Counts the total number of mutation in effluxpositive and efflux negative genomes. 
+#Input 1 = Any of the two files GenomeEffluxNegative or GenomeEffluxPositive. The raw file is downloaded from CARD database. Then Genomes are separated based on presence and absence of Efflux genes
+#Both input and the code should be inthe same folder
+#Output= 	1. A output file with number of mutation count in each genome
+#			2. A STDOUT that shows the distribution of Nember of Genome corresponding to number of mutation as bins
+=====================================
+$inp=@ARGV[0];chomp $inp;	#GenomeEffluxNegative or GenomeEffluxPositive files
+@file=`cat $inp`;
+open(OUT,">CountNegative");
+foreach $l(@file)
+{
+        chomp $l;
+        @a=split(/\t/,$l);
+        chomp @a[3];chomp @a[0];
+        print OUT @a[0],"\t";
+        @b=split(/\,/,@a[3]);
+        $tot=0;
+        foreach $j(@b)
+        {
+                chomp $j;
+                $tot++
+        }
+        chomp $tot;
+        print OUT $tot,"\n";
+}
+@d=`cat CountNegative | cut -f 2 |sort -g |uniq -c`;
+print @d;
