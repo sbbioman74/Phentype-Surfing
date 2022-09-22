@@ -1,0 +1,15 @@
+#This code extracts expression from Colombos sompendia from any set of genes. 
+#Input 1 = List of genes
+#Input 2 = Raw compendia file from colombos 
+#Both input and the code should be inthe same folder
+#Output= STDOUT on terminel Filtered-expression-compendia_colombos
+=====================================
+$inp=@ARGV[0];chomp $inp;
+$inp1=@ARGV[1];chomp $inp1;
+@list=`cat $inp`;
+foreach $l(@list)
+{
+	chomp $l;
+	@a=`grep -w "$l" $inp1`;	#input 2
+	print @a;
+}
