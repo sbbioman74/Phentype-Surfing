@@ -33,3 +33,72 @@ for($i=0;$i<=$#list;$i++)
 	}
 	#print "\n";
 }
+
+#This code is the actiual calculationof correlation-coefficient betwween a single pair of gene. So this is always called in from another code which generates the expression file for selected pair in desired format. 
+#Input 1 = A file "TempEXP" in that contains expression of a pair of genes in two consecutive line. colums are separated by tab
+#Both input and the code should be inthe same folder 
+#Output = PPCOR file that contains only the coefficient value
+====================================
+$inp=@ARGV[0]; #Temp-EXP file
+chomp $inp;
+@fil= `cat $inp`;
+open(COR,">PPCOR");
+chomp @fil[0];chomp @fil[1];
+@dp1=split(/\t/,@fil[1]);
+chomp $#dp1;
+if($#dp1 >= 30){$n=$#dp1-1}
+elsif($#dp1 < 30){$n=$#dp1-2}
+chomp $n;
+#print $n,"\n";
+
+$sum1=0;$sum2=0; 
+#print $sum1,"\t",$sum2,"\n";
+@xx=split (/\t/,@fil[0]);
+@yy=split (/\t/,@fil[1]);
+for ($j=2;$j<=$#dp1;$j++)
+{
+	chomp $xx[$j];
+        $sum1+=$xx[$j];$sum2+=$yy[$j];
+}
+$mean1=$sum1/$n;$mean2=$sum2/$n;
+#print $sum1,"\t",$sum2,"\n";
+#print $mean1,"\t",$mean2,"\n";
+$var1=0;$var2=0;
+for ($k=2;$k<=$#dp1;$k++)
+{
+
+	$dif1=($mean1-$xx[$k])**2;
+	$var1+=$dif1;
+	$dif2=($mean2-$yy[$k])**2;
+        $var2+=$dif2;
+}
+$sd1=sqrt($var1/$n);
+$sd2=sqrt($var2/$n);
+#print $sd1,"\t",$sd2,"#\n";
+#print $var1,"\t",$var2,"\n";
+$sd=$sd1*$sd2;
+$vala=0;
+$valb=0;
+$add=0;
+$addf=0;
+for ($l=2;$l<=$#dp1;$l++)
+{
+	$vala=($xx[$l]-$mean1);
+	$valb=($yy[$l]-$mean2);
+	$add=$vala*$valb;
+	if ($sd == 0)
+	{
+		$add1=0
+	}
+	else
+	{
+		$add1=$add/$sd;
+	}	
+	$addf+=$add1;
+}
+#print $addf;
+$r2= sprintf("%.3f",($addf/$n));chomp $r2;
+print COR $r2,"\n";
+#print $r2,"\n";
+undef @xx;
+undef @yy;
