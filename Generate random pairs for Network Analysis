@@ -1,0 +1,23 @@
+#This code generates 100 random pair of genes against each selected pair
+#Input 1 = List of gene pairs 
+#Input 2 = List of all genes for which Expression are available in Colombos
+#Both input and the code should be inthe same folder
+#Output= A output file <List-RandomPairs> with selected pair <Gene1-Gene2> in the first colum and Randompairs <Random1-Random2> in 100 Consecutive Columns 
+=====================================
+$inp=@ARGV[0];chomp $inp;		#List-Selected-GenePairs
+$inp1=@ARGV[1];chomp $inp1;		#List-AllGenes
+open (OUT,">List-RandomPairs");
+@list=`cat $inp`;
+for($i=0;$i<=$#list;$i++)
+{
+	chomp $list[$i];
+	print OUT $list[$i],"\t";
+	for($j=1;$j<=100;$j++)
+	{
+		chomp $j;
+		@b=`sort -R $inp1|head -n 2`;
+		chomp @b[0];chomp @b[1];
+		print OUT @b[0],"-",@b[1],"\t";
+	}
+	print OUT "\n";
+}
