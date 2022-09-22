@@ -1,0 +1,33 @@
+#The code was run in LONESTAR5 in TACC at ls5.tacc.utexas.edu
+#make 'conda' a path variable
+	export PATH=~/miniconda3/bin:$PATH
+	conda --version
+#add bioconda channel
+	conda config --add channels defaults
+	conda config --add channels bioconda
+	conda config --add channels conda-forge
+#Create a dDocent conda environment:
+	conda create -n ddocent_env ddocent
+#download samtools in local PC and extract the folder; then transfer the folder to work directory of ls5
+	scp -r /mnt/c/Users/samtools-1.11/ \
+    tacc-user/work/04346/souvik/lonestar/
+#Install samtools
+	export PATH=~/samtools/bin:$PATH
+#Install freebayes
+	scp -r /mnt/c/Users/freebayes-master/ \
+    user:/work/04346/souvik/lonestar/
+	export PATH=~/Freebayes/bin:$PATH
+#add dDocent to $PATH
+	export PATH=~/ddocent/bin:$PATH
+#Activate the dDocent environment
+	source activate ddocent_env
+#Install breseq
+	conda install breseq
+	conda update breseq
+# Install bowtie2
+	conda Install bowtie2
+	conda update bowtie2
+# check the version of 'R'
+	R --version
+#Run breseq on the uncompressed fastQ sequence files. Append all the filenames in the same command. 
+breseq -r U00096_3.gbk filename1.fastq filename2_R1_002.fastq 
