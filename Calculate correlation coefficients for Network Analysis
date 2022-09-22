@@ -1,0 +1,35 @@
+#This simple code extracts expression for a consecutive pair of gene from a list of genes and runs another code calculate-correlation.pl for a pair of genes 
+#Input 1 = List of genes
+#Input 2 = Filtered compendia file from colombos 
+#Both input and the code should be inthe same folder 
+#Output = STDOUT on terminel Gene1-vs-Gene2\tCorrelation Coefficient
+====================================
+$inp=@ARGV[0];chomp $inp;
+$inp1=@ARGV[1];chomp $inp1;
+
+@list=`cat $inp1`; 	#List_of_genes
+@explist=`cat $inp1`; 	#Filtered-expression-compendia_colombos`;
+for($i=0;$i<=$#list;$i++)
+{
+	chomp $list[$i];
+	#print $list[$i],"\t";
+	for($j=$i+1;$j<=$#list;$j++)
+	{
+		chomp $list[$j];
+		print $list[$i],"-vs-",$list[$j],"\t";
+		open (TMP, ">TempEXP");
+		#print $list[$i],"\t",$list[$j],"\n";
+		@exp1=`grep "$list[$i]" $inp1`;
+		@exp2=`grep "$list[$j]" $inp1`;
+		chomp @exp1[0];chomp @exp2[0];
+		print TMP @exp1[0],"\n";
+		print TMP @exp2[0],"\n";
+		`perl calculate-corelation.pl TempEXP`;
+		@a=`cat PPCOR`;
+		chomp @a[0];
+		print @a[0],"\t";
+		}
+		print "\n";
+	}
+	#print "\n";
+}
