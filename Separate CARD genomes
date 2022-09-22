@@ -1,0 +1,43 @@
+#This code Separates genomes with mutation in Effllux genes and non efflux genes
+#Input 1 = Raw file from CARD database <Ecoli-genome-fromCARD.txt> containing ARM mutation per genome
+#Input 2 = List of Efflux genes. A manually curated file used in all analysis 
+#Both input and the code should be inthe same folder
+#Output= Two files containing Genomes and ARMs in Efflux genes <GenomeEffluxPositive> and non efflux genes <GenomeEffluxPositive>
+=====================================
+$inp=@ARGV[0];chomp $inp;		# Ecoli-genome-fromCARD.txt
+$inp1=@ARGV[1];chomp $inp1;		# List-EffluxGene
+@file=`cat $inp`;
+open(OUT1,">GenomeEffluxPositive");
+open(OUT2,">GenomeEffluxNegative");
+foreach $l(@file)
+{
+        chomp $l;
+        @a=split(/\t/,$l);
+        chomp @a[3];chomp @a[1];
+        #print @a[3],"\n";
+        @b=split(/\,/,@a[3]);
+        $pos=0;
+        foreach $j(@b)
+        {
+                chomp $j;
+                $j=~ s/Escherichia//g;
+                $j=~ s/coli//g;
+                $j=~ s/\s//g;
+                #print $j,"**\n";
+                @c=`grep -w "$j" $inp1`;
+                chomp @c[0];
+                if(@c[0] ne "")
+                {
+                        $pos=11;
+                        last;
+                }
+        }
+        if($pos == 11)
+        {
+                print OUT1 $l,"\n";
+        }
+        elsif($pos==0)
+        {
+                print OUT2 $l,"\n";
+        }
+}
