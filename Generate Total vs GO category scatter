@@ -1,0 +1,44 @@
+#This code counts number of total mutation per genome and number of ARMs in a specific GO  category per genome
+#Input 1 = List of genes with a particular GO-Process or GO-Molecular-Function or GO-Cellualar-Location. This List are extracted from ecocyc database
+#Input 2 = Raw file from CARD database <Ecoli-genome-fromCARD.txt> containing ARM mutation per genome
+#Both input and the code should be inthe same folder
+#Output= A output file for creating Scatterplot. The file have four columns
+#			1. The Genome Id
+#			2. The type of Genome
+#			3. Total number of Mutation per genome as annotated by CARD
+#			4. Total number of ARM is a particular GO category
+=====================================
+
+$inp=@ARGV[0];chomp $inp; 		#	List-GO_Process-Genes-ECOCYC
+$inp1=@ARGV[1];chomp $inp1;		#	Ecoli-genome-fromCARD.txt
+@x=split(/\-/,$inp);chomp @x[1];
+open(OUT, ">Total-Vs-@x[1]-GeneCount-Scatterplot-All");
+@file=`cat $inp1`;	
+$count=0;
+foreach $l(@file)
+{
+        chomp $l;
+        $count++;
+        @a=split(/\t/,$l);
+        chomp @a[3];
+        chomp @a[0];chomp @a[2];
+        #print @a[3],"\n";
+        @b=split(/\,/,@a[3]);
+        $tot=0;$num=0;
+        foreach $j(@b)
+        {
+                $tot++;
+                chomp $j;
+                $j=~ s/Escherichia//g;
+                $j=~ s/coli//g;
+                $j=~ s/\s//g;
+                @c=`grep -i -w "$j" $inp`;
+                chomp @c[0];
+                if(@c[0] ne "")
+                {
+                        $num++;
+                }
+        }
+        chomp $tot;chomp $num;
+        print OUT @a[0],"\t",@a[2],"\t",$tot,"\t",$num,"\n";
+}
