@@ -1,0 +1,51 @@
+#start new jupyter session in anaconda#
+jupyter-lab
+%matplotlib widget
+
+#import packages#
+%matplotlib ipympl
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt 
+import mpl_toolkits.mplot3d
+from mpl_toolkits.mplot3d import Axes3D
+
+#import data#
+df = pd.read_csv('3D-plot.csv', usecols=['GR_S', 'MF_S', 'Evol_S','GR_P', 'MF_P', 'Evol_P'])
+group1 = list(df['GR_S'])
+group2 = list(df['MF_S'])
+group3 = list(df['Evol_S'])
+group4 = list(df['GR_S'])
+group5 = list(df['MF_S'])
+group6 = list(df['Evol_S'])
+
+
+#plot 3D graph#
+fig = plt.figure()
+ax1=fig.add_subplot(111, projection='3d')
+
+x = np.array(group1)
+y = np.array(group2)
+z = np.array(group3)
+x2 = np.array(group4)
+y2 = np.array(group5)
+z2 = np.array(group6)
+
+
+ax1.set_xlim(1.5, 3)
+ax1.set_zlim(0,5)
+ax1.set_ylim(0,6)
+ax1.scatter(x, y, z, c = 'cornflowerblue', marker='o', s=100)
+ax1.scatter(x2, y2, z2, c = 'orange', marker='o', s=100)
+
+ax1.set_xticks ([1.5, 2.0, 2.5, 3])
+ax1.set_zticks ([0, 2, 4, 6])
+ax1.set_yticks ([0, 2, 4, 6])
+ax1.tick_params(axis='both', labelsize=15)
+ax1.xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+ax1.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+ax1.zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+plt.show()
+
+#reorient the graph as needed in jupyter notebook manually using mouse and then export the graph#
+plt.savefig("3d.eps", format="eps")
