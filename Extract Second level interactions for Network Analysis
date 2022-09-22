@@ -1,0 +1,19 @@
+#This code extracts 2nd level interaction for the nodes in first level interaction network. 
+#Input 1 = List of genes /nodes 
+#Input 2 = Master input file from Ecocyc in a format "Node1/t/Node2"
+#Both input and the code should be inthe same folder
+#Output= A output file containing the interation for 
+=====================================
+$inp=@ARGV[0];chomp $inp; 		#List-nodes-level1
+$inp1=@ARGV[1];chomp $inp1; 	#Master-input-Ecocyc
+open(OUT,">Temp-net");
+open(OUT1,">Ecoli-TF-Network-for-EffluxAndDR");
+@list=`cat $inp`;
+foreach $l(@list)
+{
+	chomp $l; 
+	@a=`grep -w "$l" $inp1`;	
+	print OUT @a;
+}
+@net=`sort -s Temp-net | uniq`;
+print OUT1 @net;
